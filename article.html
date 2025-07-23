@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Article - MetaScope</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/article.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body class="article-page">
+<!-- Header Component -->
+<header class="main-header article-header" id="main-header">
+  <nav class="nav-container">
+    <div class="nav-brand">
+      <a href="index.html" class="logo">
+        <span class="logo-text">MetaScope</span>
+        <span class="logo-subtitle">Analyses Scientifiques</span>
+      </a>
+    </div>
+
+    <div class="nav-controls">
+      <button class="nav-btn toc-toggle" id="toc-toggle" title="Table des matières">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"></line>
+          <line x1="8" y1="12" x2="21" y2="12"></line>
+          <line x1="8" y1="18" x2="21" y2="18"></line>
+          <line x1="3" y1="6" x2="3.01" y2="6"></line>
+          <line x1="3" y1="12" x2="3.01" y2="12"></line>
+          <line x1="3" y1="18" x2="3.01" y2="18"></line>
+        </svg>
+      </button>
+
+      <button class="nav-btn theme-toggle" id="theme-toggle" title="Changer de thème">
+        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+
+      <a href="index.html" class="nav-btn back-btn" title="Retour à l'accueil">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H6m0 0l6 6m-6-6l6-6"></path>
+        </svg>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<!-- Reading Progress Bar -->
+<div class="reading-progress">
+  <div class="progress-bar" id="progress-bar"></div>
+</div>
+
+<!-- Table of Contents -->
+<nav class="table-of-contents" id="table-of-contents">
+  <div class="toc-header">
+    <h3>Sommaire</h3>
+    <button class="toc-close" id="toc-close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+  <ul class="toc-list" id="toc-list">
+    <!-- Table of contents will be generated dynamically -->
+  </ul>
+</nav>
+
+<!-- Chapter Navigation -->
+<div class="chapter-navigation">
+  <button class="chapter-nav-btn prev-chapter" id="prev-chapter" disabled>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M19 12H6m0 0l6 6m-6-6l6-6"></path>
+    </svg>
+    <span>Précédent</span>
+  </button>
+
+  <div class="chapter-indicator">
+    <span class="current-chapter" id="current-chapter">1</span>
+    <span class="chapter-separator">/</span>
+    <span class="total-chapters" id="total-chapters">7</span>
+  </div>
+
+  <button class="chapter-nav-btn next-chapter" id="next-chapter">
+    <span>Suivant</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M6 12h13m0 0l-6-6m6 6l-6 6"></path>
+    </svg>
+  </button>
+</div>
+
+<!-- Main Article Content -->
+<main class="article-main" id="article-main">
+  <!-- Article Header -->
+  <header class="article-header-section">
+    <div class="container">
+      <div class="article-breadcrumb">
+        <a href="index.html">Accueil</a>
+        <span>/</span>
+        <span class="article-category" id="article-category">Santé Publique</span>
+      </div>
+
+      <h1 class="article-title" id="article-title">
+        Chargement de l'article...
+      </h1>
+
+      <div class="article-meta">
+        <div class="article-author">
+          <div class="author-avatar">
+            <span id="author-initial">?</span>
+          </div>
+          <div class="author-info">
+            <span class="author-name" id="article-author">Auteur</span>
+            <span class="article-date" id="article-date">Date</span>
+          </div>
+        </div>
+
+        <div class="article-stats">
+                        <span class="read-time" id="article-read-time">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12,6 12,12 16,14"></polyline>
+                            </svg>
+                            ? min
+                        </span>
+
+          <div class="article-tags" id="article-tags">
+            <!-- Tags will be loaded dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <div class="article-excerpt" id="article-excerpt">
+        Description de l'article en cours de chargement...
+      </div>
+    </div>
+  </header>
+
+  <!-- Article Chapters -->
+  <div class="article-chapters" id="article-chapters">
+    <!-- Chapters will be loaded dynamically -->
+  </div>
+
+  <!-- Article Footer -->
+  <footer class="article-footer">
+    <div class="container">
+      <div class="article-sources">
+        <h3>Sources et références</h3>
+        <div class="sources-list" id="sources-list">
+          <!-- Sources will be loaded dynamically -->
+        </div>
+      </div>
+
+      <div class="article-methodology">
+        <h3>Méthodologie</h3>
+        <p>Cet article suit notre processus rigoureux de méta-analyse :</p>
+        <ol>
+          <li><strong>Collecte des sources :</strong> Identification et sélection des publications scientifiques pertinentes</li>
+          <li><strong>Analyse critique :</strong> Évaluation de la qualité méthodologique et de la fiabilité des études</li>
+          <li><strong>Synthèse objective :</strong> Présentation équilibrée des consensus et controverses scientifiques</li>
+        </ol>
+      </div>
+
+      <div class="article-actions">
+        <button class="action-btn share-btn" id="share-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          Partager
+        </button>
+
+        <button class="action-btn print-btn" id="print-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6,9 6,2 18,2 18,9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          Imprimer
+        </button>
+
+        <a href="index.html" class="action-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9,22 9,12 15,12 15,22"></polyline>
+          </svg>
+          Retour à l'accueil
+        </a>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<!-- Share Modal -->
+<div class="modal share-modal" id="share-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Partager cet article</h3>
+      <button class="modal-close" id="share-modal-close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="share-options">
+        <button class="share-option" data-platform="twitter">
+          <div class="share-icon twitter">𝕏</div>
+          <span>Twitter / X</span>
+        </button>
+
+        <button class="share-option" data-platform="facebook">
+          <div class="share-icon facebook">f</div>
+          <span>Facebook</span>
+        </button>
+
+        <button class="share-option" data-platform="linkedin">
+          <div class="share-icon linkedin">in</div>
+          <span>LinkedIn</span>
+        </button>
+
+        <button class="share-option" data-platform="email">
+          <div class="share-icon email">@</div>
+          <span>Email</span>
+        </button>
+      </div>
+
+      <div class="share-link">
+        <label for="share-url">Lien direct :</label>
+        <div class="link-input-group">
+          <input type="text" id="share-url" readonly>
+          <button class="copy-btn" id="copy-link-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/main.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/article.js"></script>
+</body>
+</html>

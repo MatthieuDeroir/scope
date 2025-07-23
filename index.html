@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MetaScope - Analyses Scientifiques pour Citoyens Éclairés</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body>
+<!-- Header Component -->
+<header class="main-header" id="main-header">
+  <nav class="nav-container">
+    <div class="nav-brand">
+      <a href="index.html" class="logo">
+        <span class="logo-text">MetaScope</span>
+        <span class="logo-subtitle">Analyses Scientifiques</span>
+      </a>
+    </div>
+
+    <div class="nav-menu" id="nav-menu">
+      <ul class="nav-links">
+        <li><a href="#accueil" class="nav-link">Accueil</a></li>
+        <li><a href="#dossiers" class="nav-link">Dossiers</a></li>
+        <li><a href="#methodologie" class="nav-link">Méthodologie</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-actions">
+      <button class="search-btn" id="search-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </button>
+      <button class="theme-toggle" id="theme-toggle">
+        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- Search Modal -->
+<div class="search-modal" id="search-modal">
+  <div class="search-container">
+    <div class="search-header">
+      <input type="text" class="search-input" id="search-input" placeholder="Rechercher un article, un sujet, un tag...">
+      <button class="search-close" id="search-close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="search-results" id="search-results"></div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<main class="main-content">
+  <!-- Hero Section -->
+  <section class="hero" id="accueil">
+    <div class="hero-background">
+      <div class="hero-particles"></div>
+    </div>
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="title-line">Analyses scientifiques</span>
+          <span class="title-line">pour citoyens éclairés</span>
+        </h1>
+        <p class="hero-subtitle">
+          Dans un monde où la désinformation prolifère, MetaScope vous propose des méta-analyses rigoureuses basées sur des sources scientifiques vérifiées pour vous aider à comprendre les enjeux de société complexes.
+        </p>
+        <div class="hero-actions">
+          <a href="#dossiers" class="btn btn-primary">Explorer les dossiers</a>
+          <button class="btn btn-secondary" id="generate-analysis-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7v10c0 5.55 3.84 10 9 10 1.79 0 3.5-.65 4.77-1.73"></path>
+              <path d="M22 12c0-5.55-3.84-10-9-10"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            Générer une analyse IA
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Articles Section -->
+  <section class="featured-section">
+    <div class="container">
+      <h2 class="section-title">Articles en vedette</h2>
+      <div class="featured-grid" id="featured-articles">
+        <!-- Articles will be loaded dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Dossiers Section -->
+  <section class="dossiers-section" id="dossiers">
+    <div class="container">
+      <h2 class="section-title">Dossiers thématiques</h2>
+      <div class="dossiers-grid" id="dossiers-grid">
+        <!-- Dossiers will be loaded dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Section -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number" data-target="47">0</div>
+          <div class="stat-label">Méta-analyses publiées</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="1247">0</div>
+          <div class="stat-label">Sources scientifiques analysées</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="23">0</div>
+          <div class="stat-label">Domaines d'expertise</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="89">0</div>
+          <div class="stat-label">% de satisfaction lecteurs</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Methodology Section -->
+  <section class="methodology-section" id="methodologie">
+    <div class="container">
+      <div class="methodology-content">
+        <div class="methodology-text">
+          <h2 class="section-title">Notre méthodologie</h2>
+          <p>Chaque méta-analyse suit un processus rigoureux :</p>
+          <ul class="methodology-steps">
+            <li class="step-item">
+              <div class="step-number">01</div>
+              <div class="step-content">
+                <h3>Collecte des sources</h3>
+                <p>Identification et sélection des publications scientifiques pertinentes</p>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-number">02</div>
+              <div class="step-content">
+                <h3>Analyse critique</h3>
+                <p>Évaluation de la qualité méthodologique et de la fiabilité des études</p>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-number">03</div>
+              <div class="step-content">
+                <h3>Synthèse objective</h3>
+                <p>Présentation équilibrée des consensus et controverses scientifiques</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="methodology-visual">
+          <div class="methodology-graphic">
+            <div class="graphic-elements"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="main-footer" id="contact">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo">MetaScope</div>
+        <p class="footer-description">
+          Une initiative pour promouvoir l'information scientifique accessible et la pensée critique dans le débat public.
+        </p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Navigation</h4>
+          <ul>
+            <li><a href="#accueil">Accueil</a></li>
+            <li><a href="#dossiers">Dossiers</a></li>
+            <li><a href="#methodologie">Méthodologie</a></li>
+            <li><a href="article.html">Exemple d'article</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Ressources</h4>
+          <ul>
+            <li><a href="#">Sources scientifiques</a></li>
+            <li><a href="#">Glossaire</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:contact@metascope.fr">contact@metascope.fr</a></li>
+            <li><a href="#">Équipe éditoriale</a></li>
+            <li><a href="#">Mentions légales</a></li>
+            <li><a href="#">Politique de confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 MetaScope. Tous droits réservés.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Generate Analysis Modal -->
+<div class="modal" id="generate-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Générer une méta-analyse avec Claude 4</h3>
+      <button class="modal-close" id="modal-close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="analysis-form">
+        <div class="form-group">
+          <label for="topic-input">Sujet de l'analyse</label>
+          <input type="text" id="topic-input" placeholder="Ex: Impact des réseaux sociaux sur la santé mentale des adolescents">
+        </div>
+        <div class="form-group">
+          <label for="context-input">Contexte et enjeux</label>
+          <textarea id="context-input" rows="4" placeholder="Décrivez le contexte et les enjeux spécifiques que vous souhaitez voir analysés..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="scope-input">Domaines d'analyse</label>
+          <select id="scope-input" multiple>
+            <option value="sante">Santé publique</option>
+            <option value="environnement">Environnement</option>
+            <option value="economie">Économie</option>
+            <option value="technologie">Technologie</option>
+            <option value="societe">Société</option>
+            <option value="politique">Politique publique</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          Générer l'analyse
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14m-7-7l7 7-7 7"></path>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/main.js"></script>
+<script src="js/animations.js"></script>
+</body>
+</html>
