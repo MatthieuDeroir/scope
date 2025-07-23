@@ -237,7 +237,7 @@ h4 {
   color: #3498db;
   text-decoration: none;
   margin-left: 2px;
-  transition: color 0.2s ease;
+  transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .footnote-ref:hover {
@@ -319,7 +319,7 @@ h4 {
   text-decoration: none;
   color: #333;
   flex-grow: 1;
-  transition: color 0.2s ease;
+  transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 0.2em 0;
 }
 
@@ -521,7 +521,7 @@ table th {
   box-shadow: 0 3px 10px rgba(0,0,0,0.2);
   z-index: 1000;
   display: none;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .back-to-top:hover {

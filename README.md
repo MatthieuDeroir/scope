@@ -1,4 +1,4 @@
-# MetaScope - Site Journalistique d'Analyses Scientifiques
+# Scope - Site Journalistique d'Analyses Scientifiques
 
 Un site web moderne et immersif dédié aux méta-analyses scientifiques pour aider les citoyens à se forger un avis éclairé sur les sujets de société complexes.
 
@@ -8,7 +8,7 @@ Un site web moderne et immersif dédié aux méta-analyses scientifiques pour ai
 - Design responsive mobile-first
 - Mode sombre/clair avec persistance
 - Animations fluides avec GSAP
-- Interface utilisateur immersive type Medium/New York Times
+- Interface utilisateur immersive type New York Times
 
 ### 📖 Système d'Articles Innovant
 - **Navigation par chapitres** : Chaque article est découpé en chapitres avec scroll fluide
@@ -40,6 +40,13 @@ Un site web moderne et immersif dédié aux méta-analyses scientifiques pour ai
 - Animations de chargement
 - Effets de survol sophistiqués
 
+### 📚 Style Académique Professionnel
+- Typographie soignée avec police serif Libre Baskerville
+- Mise en page inspirée des journaux académiques
+- Citations et références formatées selon les standards académiques
+- Présentation claire et structurée du contenu
+- Style cohérent sur l'ensemble du site
+
 ## 📁 Structure des Fichiers
 
 ```
@@ -48,10 +55,13 @@ Un site web moderne et immersif dédié aux méta-analyses scientifiques pour ai
 ├── article.html              # Page d'article avec navigation par chapitres
 ├── css/
 │   ├── style.css             # Styles principaux
-│   └── article.css           # Styles spécifiques aux articles
+│   ├── animations.css        # Styles d'animations
+│   ├── article.css           # Styles spécifiques aux articles
+│   ├── academic.css          # Styles académiques généraux
+│   └── index-academic.css    # Styles académiques pour la page d'accueil
 ├── js/
 │   ├── main.js              # JavaScript principal
-│   ├── animations.js        # Animations avancées
+│   ├── animation.js         # Animations avancées
 │   └── article.js           # Contrôleur des articles
 ├── data/
 │   └── articles.json        # Données des articles (mock)
@@ -69,8 +79,8 @@ Un site web moderne et immersif dédié aux méta-analyses scientifiques pour ai
 
 1. **Cloner/Télécharger les fichiers dans `/var/www/html/`**
 ```bash
-sudo mkdir -p /var/www/html/metascope
-cd /var/www/html/metascope
+sudo mkdir -p /var/www/html/scope
+cd /var/www/html/scope
 ```
 
 2. **Copier tous les fichiers dans le répertoire**
@@ -88,17 +98,17 @@ sudo cp data/* ./data/
 
 3. **Définir les permissions appropriées**
 ```bash
-sudo chown -R www-data:www-data /var/www/html/metascope
-sudo chmod -R 755 /var/www/html/metascope
+sudo chown -R www-data:www-data /var/www/html/scope
+sudo chmod -R 755 /var/www/html/scope
 ```
 
 4. **Configuration Apache (si nécessaire)**
 ```apache
 <VirtualHost *:80>
-    ServerName metascope.local
-    DocumentRoot /var/www/html/metascope
+    ServerName scope.local
+    DocumentRoot /var/www/html/scope
 
-    <Directory /var/www/html/metascope>
+    <Directory /var/www/html/scope>
         AllowOverride All
         Require all granted
     </Directory>
@@ -332,5 +342,5 @@ Le site est optimisé pour :
 
 ---
 
-**MetaScope** - Développé avec ❤️ pour promouvoir l'information scientifique accessible
+**Scope** - Développé avec ❤️ pour promouvoir l'information scientifique accessible
 # scope

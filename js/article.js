@@ -1,768 +1,597 @@
-// === ARTICLE PAGE CONTROLLER ===
+// === ENHANCED ARTICLE CONTROLLER FOR ACADEMIC CONTENT ===
 
-class ArticleController {
+class EnhancedArticleController extends ArticleController {
   constructor() {
-    this.currentChapter = 1;
-    this.totalChapters = 0;
-    this.articleData = null;
-    this.isScrolling = false;
-    this.touchStartY = 0;
-    this.touchEndY = 0;
-    this.currentTheme = localStorage.getItem('theme') || 'light';
+    super();
+    this.citations = new Map();
+    this.footnotes = new Map();
+    this.tableOfContents = [];
+    this.currentAnnotation = null;
+    this.readingProgress = {
+      timeSpent: 0,
+      chaptersRead: new Set(),
+      sourcesViewed: new Set(),
+      startTime: Date.now()
+    };
 
-    this.init();
+    this.initAcademicFeatures();
   }
 
-  async init() {
-    // Setup theme first
-    this.setupTheme();
-
-    // Load article data
-    await this.loadArticleData();
-
-    // Setup all components
-    this.setupEventListeners();
-    this.setupTableOfContents();
-    this.setupChapterNavigation();
-    this.setupProgressBar();
-    this.setupSwipeGestures();
-    this.setupKeyboardNavigation();
-    this.setupShareModal();
-
-    // Initialize animations
-    this.initializeAnimations();
-
-    // Start the article experience
-    this.startArticle();
+  async initAcademicFeatures() {
+    await super.init();
+    this.setupCitationSystem();
+    this.setupFootnotes();
+    this.setupAcademicNavigation();
+    this.setupSourcesModal();
+    this.setupReadingAnalytics();
+    this.setupPrintableView();
+    this.setupAccessibilityFeatures();
   }
 
-  // Theme management
-  setupTheme() {
-    document.documentElement.setAttribute('data-theme', this.currentTheme);
-
-    const themeToggle = document.getElementById('theme-toggle');
-    if (themeToggle) {
-      themeToggle.addEventListener('click', () => {
-        this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', this.currentTheme);
-        localStorage.setItem('theme', this.currentTheme);
-
-        // Smooth transition
-        document.documentElement.style.transition = 'all 0.3s ease';
-        setTimeout(() => {
-          document.documentElement.style.transition = '';
-        }, 300);
-      });
-    }
-  }
-
-  // Load article data from URL parameters or default
+  // Enhanced article loading with academic metadata
   async loadArticleData() {
     const urlParams = new URLSearchParams(window.location.search);
-    const articleId = urlParams.get('id') || '1';
-    const isGenerated = urlParams.get('generated') === 'true';
-    const generatedTopic = urlParams.get('topic');
+    const articleId = urlParams.get('id') || 'acetamipride-loi-duplomb-2025';
 
     try {
-      if (isGenerated && generatedTopic) {
-        this.articleData = this.generateMockArticle(generatedTopic);
-      } else {
-        // Load from JSON file
-        const response = await fetch('data/articles.json');
-        const data = await response.json();
-        this.articleData = data.featured.find(article => article.id == articleId) || data.featured[0];
-      }
+      const response = await fetch('data/articles.json');
+      const data = await response.json();
+      this.articleData = data.featured.find(article => article.id === articleId) || data.featured[0];
 
-      this.renderArticle();
+      // Process academic metadata
+      this.processAcademicMetadata();
+      this.renderEnhancedArticle();
+
     } catch (error) {
       console.error('Error loading article:', error);
       this.articleData = this.getDefaultArticle();
-      this.renderArticle();
+      this.renderEnhancedArticle();
     }
   }
 
-  generateMockArticle(topic) {
-    return {
-      id: 'generated',
-      title: `Analyse générée : ${topic}`,
-      excerpt: `Cette méta-analyse examine ${topic} à travers le prisme de la recherche scientifique récente. L'analyse a été générée automatiquement par Claude 4 et nécessite une révision éditoriale avant publication.`,
-      tags: ["IA Générée", "Brouillon", "En révision"],
-      date: new Date().toISOString().split('T')[0],
-      readTime: "10 min",
-      author: "Claude 4 (IA)",
-      chapters: [
-        {
-          id: 1,
-          title: "Introduction et contexte",
-          content: `Cette analyse de ${topic} s'appuie sur les dernières recherches disponibles. L'intelligence artificielle a identifié les enjeux principaux et synthétisé les données pertinentes pour offrir une vue d'ensemble équilibrée du sujet.`
-        },
-        {
-          id: 2,
-          title: "État de la recherche actuelle",
-          content: `Les études récentes sur ${topic} révèlent une complexité qui nécessite une approche multidisciplinaire. Cette section présente les méthodologies employées et les principaux résultats documentés dans la littérature scientifique.`
-        },
-        {
-          id: 3,
-          title: "Analyse des données",
-          content: `L'examen des données disponibles sur ${topic} met en évidence plusieurs tendances significatives. Les corrélations identifiées suggèrent des liens causaux qui méritent une investigation approfondie.`
-        },
-        {
-          id: 4,
-          title: "Implications et perspectives",
-          content: `Les implications de cette analyse de ${topic} s'étendent à plusieurs domaines. Les recommandations formulées s'appuient sur les preuves les plus robustes disponibles dans la littérature scientifique actuelle.`
-        },
-        {
-          id: 5,
-          title: "Conclusion",
-          content: `Cette analyse préliminaire de ${topic} offre un cadre de compréhension basé sur les données scientifiques. Des recherches supplémentaires sont nécessaires pour affiner certains aspects et valider les hypothèses proposées.`
-        }
-      ],
-      sources: [
-        {
-          title: "Analyse générée par Claude 4",
-          url: "#",
-          date: new Date().toISOString().split('T')[0]
-        }
-      ]
-    };
-  }
-
-  getDefaultArticle() {
-    return {
-      id: 1,
-      title: "Article non trouvé",
-      excerpt: "L'article demandé n'a pas pu être chargé. Voici un exemple d'article de démonstration.",
-      tags: ["Démonstration"],
-      date: "2025-07-23",
-      readTime: "5 min",
-      author: "Équipe MetaScope",
-      chapters: [
-        {
-          id: 1,
-          title: "Article de démonstration",
-          content: "Ceci est un exemple d'article pour démontrer les fonctionnalités de navigation par chapitres de MetaScope."
-        }
-      ],
-      sources: []
-    };
-  }
-
-  // Render article content
-  renderArticle() {
+  processAcademicMetadata() {
     if (!this.articleData) return;
 
-    // Update meta information
-    document.title = `${this.articleData.title} - MetaScope`;
+    // Process citations and create citation map
+    if (this.articleData.sources) {
+      this.articleData.sources.forEach(source => {
+        this.citations.set(source.id, source);
+      });
+    }
 
-    // Update article header
-    document.getElementById('article-title').textContent = this.articleData.title;
-    document.getElementById('article-excerpt').textContent = this.articleData.excerpt;
-    document.getElementById('article-author').textContent = this.articleData.author;
-    document.getElementById('article-date').textContent = this.formatDate(this.articleData.date);
-    document.getElementById('article-read-time').innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12,6 12,12 16,14"></polyline>
-            </svg>
-            ${this.articleData.readTime}
-        `;
+    // Build enhanced table of contents with subsections
+    this.buildDetailedTableOfContents();
 
-    // Update author initial
-    const authorInitial = this.articleData.author.charAt(0).toUpperCase();
-    document.getElementById('author-initial').textContent = authorInitial;
+    // Process methodology information
+    this.processMethodology();
 
-    // Update tags
-    const tagsContainer = document.getElementById('article-tags');
-    tagsContainer.innerHTML = this.articleData.tags.map(tag =>
-      `<span class="article-tag">${tag}</span>`
-    ).join('');
-
-    // Update chapter count
-    this.totalChapters = this.articleData.chapters.length;
-    document.getElementById('total-chapters').textContent = this.totalChapters;
-
-    // Render chapters
-    this.renderChapters();
-
-    // Render sources
-    this.renderSources();
+    // Set up reading time estimation
+    this.calculateReadingTime();
   }
 
-  renderChapters() {
-    const chaptersContainer = document.getElementById('article-chapters');
+  buildDetailedTableOfContents() {
+    this.tableOfContents = this.articleData.chapters.map(chapter => {
+      // Extract subsections from chapter content
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = chapter.content;
+      const subsections = Array.from(tempDiv.querySelectorAll('h2, h3')).map(heading => ({
+        id: this.generateSubsectionId(heading.textContent),
+        title: heading.textContent,
+        level: parseInt(heading.tagName.substring(1))
+      }));
 
-    const chaptersHTML = this.articleData.chapters.map((chapter, index) => `
-            <section class="chapter" id="chapter-${chapter.id}" data-chapter="${chapter.id}">
-                <div class="container">
-                    <div class="chapter-content">
-                        <div class="chapter-number">Chapitre ${index + 1}</div>
-                        <h2 class="chapter-title">${chapter.title}</h2>
-                        <div class="chapter-text">
-                            ${this.formatChapterContent(chapter.content)}
-                        </div>
-                    </div>
+      return {
+        id: chapter.id,
+        title: chapter.title,
+        subtitle: chapter.subtitle || '',
+        subsections: subsections,
+        estimated_time: this.estimateChapterReadingTime(chapter.content)
+      };
+    });
+  }
+
+  renderEnhancedArticle() {
+    if (!this.articleData) return;
+
+    // Render basic article structure
+    this.renderArticle();
+
+    // Add academic enhancements
+    this.renderAcademicHeader();
+    this.renderEnhancedNavigation();
+    this.renderCitationLinks();
+    this.renderMethodologySection();
+    this.renderAppendices();
+    this.renderKeywordsList();
+    this.renderRelatedArticles();
+  }
+
+  renderAcademicHeader() {
+    const headerSection = document.querySelector('.article-header-section');
+    if (!headerSection || !this.articleData) return;
+
+    // Add subtitle if present
+    if (this.articleData.subtitle) {
+      const subtitle = document.createElement('h2');
+      subtitle.className = 'article-subtitle';
+      subtitle.textContent = this.articleData.subtitle;
+      headerSection.appendChild(subtitle);
+    }
+
+    // Add academic metadata
+    const academicMeta = document.createElement('div');
+    academicMeta.className = 'academic-metadata';
+    academicMeta.innerHTML = `
+      <div class="academic-meta-grid">
+        ${this.articleData.type ? `<div class="meta-item">
+          <strong>Type:</strong> ${this.getTypeLabel(this.articleData.type)}
+        </div>` : ''}
+
+        ${this.articleData.methodology ? `<div class="meta-item">
+          <strong>Méthodologie:</strong> ${this.articleData.methodology.type}
+        </div>` : ''}
+
+        ${this.articleData.citations ? `<div class="meta-item">
+          <strong>Citations:</strong> ${this.articleData.citations.total} sources
+          <span class="citation-breakdown">
+            (${this.articleData.citations.academic} académiques,
+             ${this.articleData.citations.regulatory} réglementaires)
+          </span>
+        </div>` : ''}
+
+        <div class="meta-item">
+          <strong>Langue:</strong> ${this.articleData.language || 'fr'}
+        </div>
+      </div>
+    `;
+
+    headerSection.appendChild(academicMeta);
+
+    // Add summary box for academic articles
+    if (this.articleData.summary) {
+      this.renderExecutiveSummary();
+    }
+  }
+
+  renderExecutiveSummary() {
+    const summaryContainer = document.createElement('div');
+    summaryContainer.className = 'executive-summary';
+    summaryContainer.innerHTML = `
+      <h3>Résumé exécutif</h3>
+      <div class="summary-content">
+        <h4>Points clés:</h4>
+        <ul class="key-findings">
+          ${this.articleData.summary.keyFindings.map(finding =>
+      `<li>${finding}</li>`
+    ).join('')}
+        </ul>
+
+        <div class="implications">
+          <h4>Implications:</h4>
+          <p>${this.articleData.summary.implications}</p>
+        </div>
+      </div>
+    `;
+
+    document.querySelector('.article-header-section').appendChild(summaryContainer);
+  }
+
+  renderEnhancedNavigation() {
+    const tocModal = document.getElementById('toc-modal');
+    if (!tocModal) return;
+
+    const tocContent = tocModal.querySelector('.toc-content');
+    tocContent.innerHTML = `
+      <div class="enhanced-toc">
+        <div class="toc-header">
+          <h3>Table des matières détaillée</h3>
+          <div class="reading-progress-summary">
+            <span class="chapters-read">0/${this.tableOfContents.length}</span>
+            <span class="estimated-time">${this.articleData.readTime}</span>
+          </div>
+        </div>
+
+        <div class="toc-list">
+          ${this.tableOfContents.map(chapter => `
+            <div class="toc-chapter" data-chapter="${chapter.id}">
+              <div class="chapter-main" onclick="articleController.goToChapter(${chapter.id})">
+                <span class="chapter-number">${chapter.id}.</span>
+                <div class="chapter-info">
+                  <h4 class="chapter-title">${chapter.title}</h4>
+                  ${chapter.subtitle ? `<p class="chapter-subtitle">${chapter.subtitle}</p>` : ''}
+                  <span class="chapter-time">${chapter.estimated_time} min</span>
                 </div>
-            </section>
-        `).join('');
+              </div>
 
-    chaptersContainer.innerHTML = chaptersHTML;
-
-    // Activate first chapter if not already done
-    if (!document.querySelector('.chapter.active')) {
-      this.activateChapter(1);
-    }
-  }
-
-  formatChapterContent(content) {
-    // Simple formatting for demo - in real app, this would be more sophisticated
-    return content
-      .split('\n\n')
-      .map(paragraph => paragraph.trim())
-      .filter(paragraph => paragraph.length > 0)
-      .map(paragraph => `<p>${paragraph}</p>`)
-      .join('');
-  }
-
-  renderSources() {
-    const sourcesContainer = document.getElementById('sources-list');
-
-    if (!this.articleData.sources || this.articleData.sources.length === 0) {
-      sourcesContainer.innerHTML = '<p>Aucune source spécifique pour cet article.</p>';
-      return;
-    }
-
-    const sourcesHTML = this.articleData.sources.map(source => `
-            <div class="source-item">
-                <div class="source-title">${source.title}</div>
-                <a href="${source.url}" class="source-link" target="_blank" rel="noopener">${source.url}</a>
-                <div class="source-date">Consulté le ${this.formatDate(source.date)}</div>
+              ${chapter.subsections.length > 0 ? `
+                <div class="subsections">
+                  ${chapter.subsections.map(sub => `
+                    <div class="subsection-item" data-level="${sub.level}">
+                      <span class="subsection-title">${sub.title}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
             </div>
-        `).join('');
-
-    sourcesContainer.innerHTML = sourcesHTML;
+          `).join('')}
+        </div>
+      </div>
+    `;
   }
 
-  // Setup event listeners
-  setupEventListeners() {
-    // Table of contents toggle
-    const tocToggle = document.getElementById('toc-toggle');
-    const tocClose = document.getElementById('toc-close');
-    const toc = document.getElementById('table-of-contents');
+  setupCitationSystem() {
+    // Create citations modal
+    this.createCitationsModal();
 
-    if (tocToggle) {
-      tocToggle.addEventListener('click', () => {
-        toc.classList.toggle('active');
-      });
-    }
-
-    if (tocClose) {
-      tocClose.addEventListener('click', () => {
-        toc.classList.remove('active');
-      });
-    }
-
-    // Close TOC when clicking outside
+    // Add click handlers for citation links
     document.addEventListener('click', (e) => {
-      if (!toc.contains(e.target) && !tocToggle.contains(e.target)) {
-        toc.classList.remove('active');
-      }
-    });
-
-    // Chapter navigation buttons
-    const prevBtn = document.getElementById('prev-chapter');
-    const nextBtn = document.getElementById('next-chapter');
-
-    if (prevBtn) {
-      prevBtn.addEventListener('click', () => this.goToPreviousChapter());
-    }
-
-    if (nextBtn) {
-      nextBtn.addEventListener('click', () => this.goToNextChapter());
-    }
-
-    // Scroll listener for progress and chapter detection
-    let scrollTimeout;
-    window.addEventListener('scroll', () => {
-      this.updateProgressBar();
-
-      // Debounce chapter detection
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        this.detectCurrentChapter();
-      }, 100);
-    });
-
-    // Share functionality
-    document.getElementById('share-btn')?.addEventListener('click', () => {
-      this.openShareModal();
-    });
-
-    // Print functionality
-    document.getElementById('print-btn')?.addEventListener('click', () => {
-      window.print();
-    });
-  }
-
-  // Table of contents setup
-  setupTableOfContents() {
-    const tocList = document.getElementById('toc-list');
-
-    if (!this.articleData?.chapters) return;
-
-    const tocHTML = this.articleData.chapters.map((chapter, index) => `
-            <li class="toc-item">
-                <a href="#chapter-${chapter.id}" class="toc-link" data-chapter="${chapter.id}">
-                    ${index + 1}. ${chapter.title}
-                </a>
-            </li>
-        `).join('');
-
-    tocList.innerHTML = tocHTML;
-
-    // Add click handlers for TOC links
-    tocList.querySelectorAll('.toc-link').forEach(link => {
-      link.addEventListener('click', (e) => {
+      if (e.target.classList.contains('citation-link')) {
         e.preventDefault();
-        const chapterId = parseInt(link.dataset.chapter);
-        this.goToChapter(chapterId);
-        document.getElementById('table-of-contents').classList.remove('active');
-      });
+        const citationId = e.target.dataset.citation;
+        this.showCitationPopup(citationId, e.target);
+      }
     });
   }
 
-  // Chapter navigation
-  setupChapterNavigation() {
-    this.updateChapterNavigation();
-  }
-
-  updateChapterNavigation() {
-    const prevBtn = document.getElementById('prev-chapter');
-    const nextBtn = document.getElementById('next-chapter');
-    const currentChapterSpan = document.getElementById('current-chapter');
-
-    if (currentChapterSpan) {
-      currentChapterSpan.textContent = this.currentChapter;
-    }
-
-    if (prevBtn) {
-      prevBtn.disabled = this.currentChapter <= 1;
-    }
-
-    if (nextBtn) {
-      nextBtn.disabled = this.currentChapter >= this.totalChapters;
-    }
-  }
-
-  goToChapter(chapterNumber) {
-    if (chapterNumber < 1 || chapterNumber > this.totalChapters || this.isScrolling) {
-      return;
-    }
-
-    this.isScrolling = true;
-    this.currentChapter = chapterNumber;
-
-    const targetChapter = document.getElementById(`chapter-${chapterNumber}`);
-    if (targetChapter) {
-      // Smooth scroll to chapter
-      targetChapter.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-
-      // Update UI after scroll
-      setTimeout(() => {
-        this.activateChapter(chapterNumber);
-        this.updateChapterNavigation();
-        this.updateTableOfContents();
-        this.isScrolling = false;
-      }, 800);
-    }
-  }
-
-  goToNextChapter() {
-    if (this.currentChapter < this.totalChapters) {
-      this.goToChapter(this.currentChapter + 1);
-    }
-  }
-
-  goToPreviousChapter() {
-    if (this.currentChapter > 1) {
-      this.goToChapter(this.currentChapter - 1);
-    }
-  }
-
-  activateChapter(chapterNumber) {
-    // Remove active class from all chapters
-    document.querySelectorAll('.chapter').forEach(chapter => {
-      chapter.classList.remove('active');
-    });
-
-    // Add active class to current chapter
-    const currentChapter = document.getElementById(`chapter-${chapterNumber}`);
-    if (currentChapter) {
-      currentChapter.classList.add('active');
-    }
-  }
-
-  updateTableOfContents() {
-    // Update active TOC link
-    document.querySelectorAll('.toc-link').forEach(link => {
-      link.classList.remove('active');
-    });
-
-    const activeLink = document.querySelector(`.toc-link[data-chapter="${this.currentChapter}"]`);
-    if (activeLink) {
-      activeLink.classList.add('active');
-    }
-  }
-
-  // Progress bar
-  setupProgressBar() {
-    this.updateProgressBar();
-  }
-
-  updateProgressBar() {
-    const progressBar = document.getElementById('progress-bar');
-    if (!progressBar) return;
-
-    const scrollTop = window.pageYOffset;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollPercent = Math.min((scrollTop / docHeight) * 100, 100);
-
-    progressBar.style.width = `${scrollPercent}%`;
-  }
-
-  // Detect current chapter based on scroll position
-  detectCurrentChapter() {
-    if (this.isScrolling) return;
-
+  renderCitationLinks() {
+    // Process all citation references in content
     const chapters = document.querySelectorAll('.chapter');
-    const scrollTop = window.pageYOffset + window.innerHeight / 2;
-
-    let currentChapterNumber = 1;
-
-    chapters.forEach((chapter, index) => {
-      const chapterTop = chapter.offsetTop;
-      const chapterBottom = chapterTop + chapter.offsetHeight;
-
-      if (scrollTop >= chapterTop && scrollTop < chapterBottom) {
-        currentChapterNumber = index + 1;
-      }
-    });
-
-    if (currentChapterNumber !== this.currentChapter) {
-      this.currentChapter = currentChapterNumber;
-      this.updateChapterNavigation();
-      this.updateTableOfContents();
-      this.activateChapter(currentChapterNumber);
-    }
-  }
-
-  // Swipe gestures for mobile
-  setupSwipeGestures() {
-    document.addEventListener('touchstart', (e) => {
-      this.touchStartY = e.touches[0].clientY;
-    }, { passive: true });
-
-    document.addEventListener('touchend', (e) => {
-      this.touchEndY = e.changedTouches[0].clientY;
-      this.handleSwipe();
-    }, { passive: true });
-  }
-
-  handleSwipe() {
-    const swipeThreshold = 50;
-    const deltaY = this.touchStartY - this.touchEndY;
-
-    if (Math.abs(deltaY) > swipeThreshold) {
-      if (deltaY > 0) {
-        // Swipe up - next chapter
-        this.goToNextChapter();
-      } else {
-        // Swipe down - previous chapter
-        this.goToPreviousChapter();
-      }
-    }
-  }
-
-  // Keyboard navigation
-  setupKeyboardNavigation() {
-    document.addEventListener('keydown', (e) => {
-      // Only handle if no input is focused
-      if (document.activeElement.tagName === 'INPUT' ||
-        document.activeElement.tagName === 'TEXTAREA') {
-        return;
-      }
-
-      switch (e.key) {
-        case 'ArrowRight':
-        case 'ArrowDown':
-        case ' ':
-          e.preventDefault();
-          this.goToNextChapter();
-          break;
-        case 'ArrowLeft':
-        case 'ArrowUp':
-          e.preventDefault();
-          this.goToPreviousChapter();
-          break;
-        case 'Home':
-          e.preventDefault();
-          this.goToChapter(1);
-          break;
-        case 'End':
-          e.preventDefault();
-          this.goToChapter(this.totalChapters);
-          break;
-        case 'Escape':
-          document.getElementById('table-of-contents').classList.remove('active');
-          this.closeShareModal();
-          break;
-      }
-    });
-  }
-
-  // Share modal
-  setupShareModal() {
-    const shareModal = document.getElementById('share-modal');
-    const shareModalClose = document.getElementById('share-modal-close');
-    const copyLinkBtn = document.getElementById('copy-link-btn');
-    const shareUrlInput = document.getElementById('share-url');
-
-    // Set current URL
-    if (shareUrlInput) {
-      shareUrlInput.value = window.location.href;
-    }
-
-    // Close modal
-    if (shareModalClose) {
-      shareModalClose.addEventListener('click', () => {
-        this.closeShareModal();
+    chapters.forEach(chapter => {
+      const content = chapter.innerHTML;
+      // Replace citation markers with interactive links
+      const citationRegex = /<a href="#(fn\d+)" class="footnote-ref">(\d+)<\/a>/g;
+      const updatedContent = content.replace(citationRegex, (match, fnId, number) => {
+        return `<sup><a href="#${fnId}" class="citation-link" data-citation="${fnId}">[${number}]</a></sup>`;
       });
-    }
+      chapter.innerHTML = updatedContent;
+    });
+  }
 
-    // Close on backdrop click
-    if (shareModal) {
-      shareModal.addEventListener('click', (e) => {
-        if (e.target === shareModal) {
-          this.closeShareModal();
+  showCitationPopup(citationId, element) {
+    const citation = this.citations.get(citationId);
+    if (!citation) return;
+
+    // Remove existing popups
+    document.querySelectorAll('.citation-popup').forEach(popup => popup.remove());
+
+    const popup = document.createElement('div');
+    popup.className = 'citation-popup';
+    popup.innerHTML = `
+      <div class="citation-content">
+        <div class="citation-header">
+          <h4>${citation.title}</h4>
+          <button class="close-popup">&times;</button>
+        </div>
+
+        <div class="citation-details">
+          ${citation.authors ? `<p><strong>Auteurs:</strong> ${citation.authors.join(', ')}</p>` : ''}
+          ${citation.journal ? `<p><strong>Journal:</strong> ${citation.journal}</p>` : ''}
+          ${citation.organization ? `<p><strong>Organisation:</strong> ${citation.organization}</p>` : ''}
+          <p><strong>Date:</strong> ${citation.date}</p>
+          ${citation.doi ? `<p><strong>DOI:</strong> ${citation.doi}</p>` : ''}
+        </div>
+
+        <div class="citation-actions">
+          <a href="${citation.url}" target="_blank" class="btn-primary">Consulter la source</a>
+          <button onclick="this.copyToClipboard('${this.formatCitation(citation)}')" class="btn-secondary">Copier la citation</button>
+        </div>
+      </div>
+    `;
+
+    // Position popup near the clicked element
+    const rect = element.getBoundingClientRect();
+    popup.style.position = 'absolute';
+    popup.style.top = `${rect.bottom + window.scrollY + 10}px`;
+    popup.style.left = `${rect.left + window.scrollX}px`;
+    popup.style.zIndex = '1000';
+
+    document.body.appendChild(popup);
+
+    // Close popup handlers
+    popup.querySelector('.close-popup').onclick = () => popup.remove();
+    document.addEventListener('click', (e) => {
+      if (!popup.contains(e.target) && e.target !== element) {
+        popup.remove();
+      }
+    }, { once: true });
+
+    // Track source viewing
+    this.readingProgress.sourcesViewed.add(citationId);
+  }
+
+  renderMethodologySection() {
+    if (!this.articleData.methodology) return;
+
+    const methodologySection = document.createElement('section');
+    methodologySection.className = 'methodology-section';
+    methodologySection.innerHTML = `
+      <h3>Méthodologie de recherche</h3>
+      <div class="methodology-grid">
+        <div class="method-item">
+          <h4>Type d'étude</h4>
+          <p>${this.articleData.methodology.type}</p>
+        </div>
+
+        <div class="method-item">
+          <h4>Sources</h4>
+          <p>${this.articleData.methodology.sources}</p>
+        </div>
+
+        <div class="method-item">
+          <h4>Période couverte</h4>
+          <p>${this.articleData.methodology.period}</p>
+        </div>
+
+        <div class="method-item">
+          <h4>Bases de données</h4>
+          <p>${this.articleData.methodology.databases.join(', ')}</p>
+        </div>
+      </div>
+    `;
+
+    // Insert after article content, before sources
+    const articleFooter = document.querySelector('.article-footer');
+    if (articleFooter) {
+      articleFooter.insertBefore(methodologySection, articleFooter.firstChild);
+    }
+  }
+
+  renderAppendices() {
+    if (!this.articleData.appendices) return;
+
+    const appendicesSection = document.createElement('section');
+    appendicesSection.className = 'appendices-section';
+    appendicesSection.innerHTML = `
+      <h3>Annexes</h3>
+      <div class="appendices-list">
+        ${this.articleData.appendices.map(appendix => `
+          <div class="appendix-item" data-type="${appendix.type}">
+            <h4>${appendix.title}</h4>
+            <p>${appendix.content}</p>
+            <span class="appendix-type">${this.getAppendixTypeLabel(appendix.type)}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    document.querySelector('.article-footer').appendChild(appendicesSection);
+  }
+
+  renderKeywordsList() {
+    if (!this.articleData.keywords) return;
+
+    const keywordsSection = document.createElement('div');
+    keywordsSection.className = 'keywords-section';
+    keywordsSection.innerHTML = `
+      <h4>Mots-clés</h4>
+      <div class="keywords-list">
+        ${this.articleData.keywords.map(keyword =>
+      `<span class="keyword-tag">${keyword}</span>`
+    ).join('')}
+      </div>
+    `;
+
+    document.querySelector('.article-footer').appendChild(keywordsSection);
+  }
+
+  setupReadingAnalytics() {
+    // Track reading progress
+    this.trackChapterProgress();
+    this.trackScrollDepth();
+    this.trackTimeSpent();
+
+    // Update progress indicators
+    setInterval(() => {
+      this.updateReadingProgress();
+    }, 30000); // Update every 30 seconds
+  }
+
+  trackChapterProgress() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const chapterId = entry.target.dataset.chapter;
+          this.readingProgress.chaptersRead.add(parseInt(chapterId));
+          this.updateProgressIndicators();
         }
       });
-    }
+    }, { threshold: 0.5 });
 
-    // Copy link
-    if (copyLinkBtn) {
-      copyLinkBtn.addEventListener('click', () => {
-        this.copyLinkToClipboard();
-      });
-    }
-
-    // Share platform buttons
-    document.querySelectorAll('.share-option').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const platform = e.currentTarget.dataset.platform;
-        this.shareToplatform(platform);
-      });
+    document.querySelectorAll('.chapter').forEach(chapter => {
+      observer.observe(chapter);
     });
   }
 
-  openShareModal() {
-    const shareModal = document.getElementById('share-modal');
-    if (shareModal) {
-      shareModal.classList.add('active');
-      document.body.style.overflow = 'hidden';
+  updateProgressIndicators() {
+    // Update table of contents progress
+    const chaptersReadCount = this.readingProgress.chaptersRead.size;
+    const totalChapters = this.tableOfContents.length;
+
+    const progressElement = document.querySelector('.chapters-read');
+    if (progressElement) {
+      progressElement.textContent = `${chaptersReadCount}/${totalChapters}`;
+    }
+
+    // Update progress bar
+    const progressPercent = (chaptersReadCount / totalChapters) * 100;
+    const progressBar = document.querySelector('.reading-progress-bar');
+    if (progressBar) {
+      progressBar.style.width = `${progressPercent}%`;
     }
   }
 
-  closeShareModal() {
-    const shareModal = document.getElementById('share-modal');
-    if (shareModal) {
-      shareModal.classList.remove('active');
-      document.body.style.overflow = '';
+  setupPrintableView() {
+    // Add print stylesheet toggle
+    const printBtn = document.createElement('button');
+    printBtn.className = 'print-btn';
+    printBtn.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6,9 6,2 18,2 18,9"></polyline>
+        <path d="M6,18H4a2,2,0,0,1-2-2v-5a2,2,0,0,1,2-2H20a2,2,0,0,1,2,2v5a2,2,0,0,1-2,2H18"></path>
+        <rect x="6" y="14" width="12" height="8"></rect>
+      </svg>
+      Version imprimable
+    `;
+
+    printBtn.onclick = () => this.generatePrintableVersion();
+
+    document.querySelector('.article-actions').appendChild(printBtn);
+  }
+
+  generatePrintableVersion() {
+    // Create print-optimized version
+    const printWindow = window.open('', '_blank');
+    const printContent = this.buildPrintableHTML();
+
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    printWindow.print();
+  }
+
+  buildPrintableHTML() {
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${this.articleData.title}</title>
+        <style>
+          body { font-family: 'Times New Roman', serif; line-height: 1.6; margin: 2cm; }
+          .print-header { border-bottom: 2px solid #000; padding-bottom: 1em; margin-bottom: 2em; }
+          .chapter { page-break-before: auto; margin-bottom: 2em; }
+          .citation-link { color: #000; text-decoration: none; }
+          .table-responsive table { width: 100%; border-collapse: collapse; }
+          .table-responsive th, .table-responsive td { border: 1px solid #000; padding: 8px; }
+          .info-box, .warning-box { border: 1px solid #000; padding: 1em; margin: 1em 0; }
+          .sources-section { page-break-before: always; }
+          @media print {
+            .no-print { display: none; }
+            .chapter { page-break-inside: avoid; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="print-header">
+          <h1>${this.articleData.title}</h1>
+          ${this.articleData.subtitle ? `<h2>${this.articleData.subtitle}</h2>` : ''}
+          <p><strong>Auteur:</strong> ${this.articleData.author}</p>
+          <p><strong>Date:</strong> ${this.formatDate(this.articleData.date)}</p>
+        </div>
+
+        ${this.buildPrintableTableOfContents()}
+
+        <div class="content">
+          ${this.articleData.chapters.map(chapter => `
+            <div class="chapter">
+              <h2>${chapter.id}. ${chapter.title}</h2>
+              ${chapter.subtitle ? `<h3>${chapter.subtitle}</h3>` : ''}
+              <div class="chapter-content">${chapter.content}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="sources-section">
+          <h2>Sources et références</h2>
+          ${this.buildPrintableSources()}
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // Utility methods
+  getTypeLabel(type) {
+    const labels = {
+      'meta-analysis': 'Méta-analyse',
+      'research': 'Article de recherche',
+      'review': 'Revue de littérature',
+      'opinion': 'Article d\'opinion'
+    };
+    return labels[type] || type;
+  }
+
+  getAppendixTypeLabel(type) {
+    const labels = {
+      'legal': 'Juridique',
+      'scientific': 'Scientifique',
+      'regulatory': 'Réglementaire',
+      'economic': 'Économique',
+      'media': 'Médiatique',
+      'technical': 'Technique'
+    };
+    return labels[type] || type;
+  }
+
+  formatCitation(citation) {
+    // Format citation according to academic standards
+    let formatted = '';
+
+    if (citation.authors) {
+      formatted += citation.authors.join(', ') + '. ';
     }
-  }
 
-  async copyLinkToClipboard() {
-    const shareUrlInput = document.getElementById('share-url');
-    const copyBtn = document.getElementById('copy-link-btn');
+    formatted += `"${citation.title}". `;
 
-    try {
-      await navigator.clipboard.writeText(shareUrlInput.value);
-
-      // Visual feedback
-      const originalHTML = copyBtn.innerHTML;
-      copyBtn.innerHTML = '✓';
-      copyBtn.style.background = '#10b981';
-
-      setTimeout(() => {
-        copyBtn.innerHTML = originalHTML;
-        copyBtn.style.background = '';
-      }, 2000);
-
-    } catch (err) {
-      console.error('Failed to copy link:', err);
-      // Fallback for older browsers
-      shareUrlInput.select();
-      document.execCommand('copy');
-    }
-  }
-
-  shareToplatform(platform) {
-    const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent(this.articleData.title);
-    const description = encodeURIComponent(this.articleData.excerpt);
-
-    let shareUrl = '';
-
-    switch (platform) {
-      case 'twitter':
-        shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
-        break;
-      case 'facebook':
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-        break;
-      case 'linkedin':
-        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-        break;
-      case 'email':
-        shareUrl = `mailto:?subject=${title}&body=${description}%0A%0A${url}`;
-        break;
+    if (citation.journal) {
+      formatted += `${citation.journal}`;
+      if (citation.volume) formatted += `, vol. ${citation.volume}`;
+      if (citation.issue) formatted += `, n° ${citation.issue}`;
+      if (citation.pages) formatted += `, ${citation.pages}`;
+      formatted += '. ';
     }
 
-    if (shareUrl) {
-      window.open(shareUrl, '_blank', 'width=600,height=400');
+    formatted += `${citation.date}. `;
+
+    if (citation.doi) {
+      formatted += `DOI: ${citation.doi}. `;
     }
+
+    if (citation.url) {
+      formatted += `Disponible à l'adresse : ${citation.url}`;
+    }
+
+    return formatted;
   }
 
-  // Initialize animations
-  initializeAnimations() {
-    if (typeof gsap === 'undefined') return;
+  calculateReadingTime() {
+    if (!this.articleData.chapters) return;
 
-    // Animate article header on load
-    gsap.from('.article-title', {
-      opacity: 0,
-      y: 30,
-      duration: 0.8,
-      ease: "power3.out"
+    let totalWords = 0;
+    this.articleData.chapters.forEach(chapter => {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = chapter.content;
+      const text = tempDiv.textContent || tempDiv.innerText || '';
+      totalWords += text.split(/\s+/).length;
     });
 
-    gsap.from('.article-meta', {
-      opacity: 0,
-      y: 20,
-      duration: 0.8,
-      delay: 0.2,
-      ease: "power3.out"
-    });
+    // Average reading speed: 200-250 words per minute in French
+    const readingTimeMinutes = Math.ceil(totalWords / 225);
 
-    gsap.from('.article-excerpt', {
-      opacity: 0,
-      y: 20,
-      duration: 0.8,
-      delay: 0.4,
-      ease: "power3.out"
-    });
+    if (!this.articleData.readTime) {
+      this.articleData.readTime = `${readingTimeMinutes} min`;
+    }
 
-    // Animate chapter navigation
-    gsap.from('.chapter-navigation', {
-      opacity: 0,
-      y: 50,
-      duration: 0.8,
-      delay: 0.6,
-      ease: "back.out(1.7)"
-    });
+    return readingTimeMinutes;
   }
 
-  // Start the article experience
-  startArticle() {
-    // Activate first chapter
-    setTimeout(() => {
-      this.activateChapter(1);
-      this.updateTableOfContents();
-    }, 500);
-
-    // Add loading states
-    this.removeLoadingStates();
+  estimateChapterReadingTime(content) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = content;
+    const text = tempDiv.textContent || tempDiv.innerText || '';
+    const words = text.split(/\s+/).length;
+    return Math.ceil(words / 225); // minutes
   }
 
-  removeLoadingStates() {
-    document.querySelectorAll('.loading').forEach(element => {
-      element.classList.remove('loading');
-    });
-  }
-
-  // Utility functions
-  formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  }
-
-  // Public methods for external control
-  getCurrentChapter() {
-    return this.currentChapter;
-  }
-
-  getTotalChapters() {
-    return this.totalChapters;
-  }
-
-  jumpToChapter(chapterNumber) {
-    this.goToChapter(chapterNumber);
+  generateSubsectionId(title) {
+    return title.toLowerCase()
+      .replace(/[^\w\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-')     // Replace spaces with hyphens
+      .trim();
   }
 }
 
-// Initialize article controller when DOM is ready
+// Initialize enhanced controller when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  window.articleController = new ArticleController();
-});
-
-// Add some accessibility improvements
-document.addEventListener('DOMContentLoaded', () => {
-  // Add ARIA labels
-  const progressBar = document.getElementById('progress-bar');
-  if (progressBar) {
-    progressBar.setAttribute('role', 'progressbar');
-    progressBar.setAttribute('aria-label', 'Progression de lecture');
+  if (document.body.classList.contains('article-page')) {
+    window.articleController = new EnhancedArticleController();
   }
-
-  // Improve keyboard navigation
-  const chapters = document.querySelectorAll('.chapter');
-  chapters.forEach((chapter, index) => {
-    chapter.setAttribute('tabindex', '0');
-    chapter.setAttribute('aria-label', `Chapitre ${index + 1}`);
-  });
-
-  // Add skip link
-  const skipLink = document.createElement('a');
-  skipLink.href = '#article-main';
-  skipLink.textContent = 'Aller au contenu principal';
-  skipLink.className = 'skip-link';
-  skipLink.style.cssText = `
-        position: absolute;
-        top: -40px;
-        left: 6px;
-        background: var(--primary-color);
-        color: white;
-        padding: 8px;
-        text-decoration: none;
-        border-radius: 4px;
-        z-index: 10000;
-        transition: top 0.3s;
-    `;
-
-  skipLink.addEventListener('focus', () => {
-    skipLink.style.top = '6px';
-  });
-
-  skipLink.addEventListener('blur', () => {
-    skipLink.style.top = '-40px';
-  });
-
-  document.body.insertBefore(skipLink, document.body.firstChild);
 });
-
-// Export for external use
-window.ArticleController = ArticleController;

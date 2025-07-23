@@ -1,0 +1,328 @@
+/* === ACADEMIC JOURNAL STYLING FOR ARTICLES === */
+
+/* Base Article Styling */
+.article-page {
+  font-family: "Libre Baskerville", Georgia, serif;
+  line-height: 1.7;
+  color: #333;
+  background-color: #fff;
+}
+
+/* Article Typography */
+.article-main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.article-header-section {
+  margin-bottom: 3rem;
+  text-align: center;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 2rem;
+}
+
+.article-title {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: #1a202c;
+}
+
+.article-subtitle {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #4a5568;
+  margin-bottom: 1.5rem;
+}
+
+.article-meta {
+  font-family: "Inter", sans-serif;
+  font-size: 0.9rem;
+  color: #718096;
+  margin-bottom: 1rem;
+}
+
+.article-authors {
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+/* Abstract Section */
+.article-abstract {
+  font-style: italic;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-left: 4px solid #4a5568;
+}
+
+.abstract-title {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+/* Chapter Styling */
+.article-chapter {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.chapter-title {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 2rem 0 1.5rem;
+  color: #1a202c;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.chapter-content p {
+  margin-bottom: 1.5rem;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Figures and Tables */
+.article-figure {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.figure-caption {
+  font-size: 0.9rem;
+  color: #4a5568;
+  margin-top: 0.5rem;
+  text-align: center;
+  font-style: italic;
+}
+
+.article-table {
+  width: 100%;
+  margin: 2rem 0;
+  border-collapse: collapse;
+}
+
+.article-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+}
+
+.article-table td {
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+}
+
+.table-caption {
+  font-size: 0.9rem;
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Citations and References */
+.citation {
+  font-size: 0.9rem;
+  color: #4a5568;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border-left: 4px solid #4a5568;
+}
+
+.citation-source {
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+.article-references {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.references-title {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1a202c;
+}
+
+.reference-list {
+  padding-left: 1rem;
+}
+
+.reference-item {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-indent: -1rem;
+  padding-left: 1rem;
+}
+
+/* Footnotes */
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+}
+
+.footnote {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+/* Table of Contents Styling */
+.table-of-contents {
+  font-family: "Inter", sans-serif;
+  background-color: #f8f9fa;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+
+.toc-header {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1rem;
+}
+
+.toc-header h3 {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.toc-list {
+  padding: 1rem;
+}
+
+.toc-list li {
+  margin-bottom: 0.5rem;
+}
+
+.toc-list a {
+  color: #4a5568;
+  text-decoration: none;
+  transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toc-list a:hover {
+  color: #1a202c;
+  text-decoration: underline;
+}
+
+.toc-list a.active {
+  color: #1a202c;
+  font-weight: 600;
+}
+
+/* Navigation Controls */
+.chapter-navigation {
+  font-family: "Inter", sans-serif;
+  margin: 2rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.chapter-nav-btn {
+  font-family: "Inter", sans-serif;
+  color: #4a5568;
+  background-color: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chapter-nav-btn:hover:not([disabled]) {
+  background-color: #f8f9fa;
+  color: #1a202c;
+}
+
+.chapter-indicator {
+  font-family: "Inter", sans-serif;
+  font-size: 0.9rem;
+  color: #718096;
+}
+
+/* Dark Mode Adjustments */
+[data-theme="dark"] .article-page {
+  color: var(--dark-text-primary);
+  background-color: var(--dark-primary);
+}
+
+[data-theme="dark"] .article-title,
+[data-theme="dark"] .chapter-title,
+[data-theme="dark"] .references-title {
+  color: var(--dark-text-primary);
+}
+
+[data-theme="dark"] .article-subtitle {
+  color: var(--dark-text-secondary);
+}
+
+[data-theme="dark"] .article-meta,
+[data-theme="dark"] .figure-caption,
+[data-theme="dark"] .table-caption {
+  color: var(--dark-text-muted);
+}
+
+[data-theme="dark"] .article-abstract,
+[data-theme="dark"] .citation,
+[data-theme="dark"] .table-of-contents {
+  background-color: var(--dark-secondary);
+  border-color: var(--dark-tertiary);
+}
+
+[data-theme="dark"] .article-table th {
+  background-color: var(--dark-secondary);
+  border-color: var(--dark-tertiary);
+}
+
+[data-theme="dark"] .article-table td {
+  border-color: var(--dark-tertiary);
+}
+
+[data-theme="dark"] .chapter-nav-btn {
+  color: var(--dark-text-secondary);
+  border-color: var(--dark-tertiary);
+}
+
+[data-theme="dark"] .chapter-nav-btn:hover:not([disabled]) {
+  background-color: var(--dark-secondary);
+  color: var(--dark-text-primary);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .article-title {
+    font-size: 2rem;
+  }
+
+  .article-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .chapter-title {
+    font-size: 1.5rem;
+  }
+
+  .article-main {
+    padding: 1rem;
+  }
+}

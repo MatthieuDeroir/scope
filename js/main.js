@@ -5,10 +5,18 @@ class MetaScopeApp {
     this.data = null;
     this.searchModal = null;
     this.generateModal = null;
-    this.currentTheme = localStorage.getItem('theme') || 'light';
+    this.currentTheme = localStorage.getItem('theme') || this.getSystemPreference();
     this.isLoading = false;
 
     this.init();
+  }
+
+  // Get system preference for dark/light mode
+  getSystemPreference() {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
   }
 
   // Initialize the application
@@ -18,6 +26,7 @@ class MetaScopeApp {
     this.setupMobileMenu();
     this.setupModals();
     this.setupSearch();
+    this.setupSystemThemeListener();
 
     // Load data and render content
     await this.loadData();
@@ -30,6 +39,18 @@ class MetaScopeApp {
       this.animateHero();
       this.animateStats();
     }, 100);
+  }
+
+  // Listen for system theme preference changes
+  setupSystemThemeListener() {
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('theme')) {
+          this.currentTheme = e.matches ? 'dark' : 'light';
+          this.setupTheme();
+        }
+      });
+    }
   }
 
   // Setup all event listeners
@@ -569,11 +590,16 @@ class MetaScopeApp {
   handleHeaderScroll() {
     const header = document.getElementById('main-header');
     if (header) {
+      const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
       if (window.scrollY > 100) {
-        header.style.background = 'rgba(255, 255, 255, 0.98)';
+        header.style.background = isDarkMode
+          ? 'rgba(26, 32, 44, 0.98)'
+          : 'rgba(255, 255, 255, 0.98)';
         header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
       } else {
-        header.style.background = 'rgba(255, 255, 255, 0.95)';
+        header.style.background = isDarkMode
+          ? 'rgba(26, 32, 44, 0.95)'
+          : 'rgba(255, 255, 255, 0.95)';
         header.style.boxShadow = 'none';
       }
     }

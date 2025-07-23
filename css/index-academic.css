@@ -1,0 +1,335 @@
+/* === ACADEMIC JOURNAL STYLING FOR HOME PAGE === */
+
+/* Base Styling */
+body {
+  font-family: "Libre Baskerville", Georgia, serif;
+  line-height: 1.7;
+  color: #333;
+}
+
+/* Typography Enhancements */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+p {
+  margin-bottom: 1.5rem;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Hero Section */
+.hero-title {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+/* Featured Articles */
+.featured-articles {
+  background-color: #f8f9fa;
+  padding: 4rem 0;
+}
+
+.section-title {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 3px;
+  background-color: #4a5568;
+  margin: 1rem auto 0;
+}
+
+.article-card {
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.article-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.article-card-content {
+  padding: 1.5rem;
+}
+
+.article-card-title {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.article-card-excerpt {
+  font-size: 0.95rem;
+  color: #4a5568;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.article-meta {
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+  color: #718096;
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.article-date {
+  margin-right: 1rem;
+}
+
+.article-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.article-tag {
+  font-family: "Inter", sans-serif;
+  font-size: 0.75rem;
+  background-color: #edf2f7;
+  color: #4a5568;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* Methodology Section */
+.methodology-section {
+  padding: 4rem 0;
+  background-color: #fff;
+}
+
+.methodology-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.methodology-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.methodology-step {
+  text-align: left;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border-left: 4px solid #4a5568;
+}
+
+.step-number {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 1rem;
+}
+
+.step-title {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.step-description {
+  font-size: 0.95rem;
+  color: #4a5568;
+}
+
+/* Contact Section */
+.contact-section {
+  padding: 4rem 0;
+  background-color: #f8f9fa;
+}
+
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  color: #1a202c;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #4a5568;
+  box-shadow: 0 0 0 3px rgba(74, 85, 104, 0.2);
+}
+
+/* Footer */
+.footer {
+  background-color: #2d3748;
+  color: #e2e8f0;
+  padding: 3rem 0;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.footer-column h3 {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  color: #f7fafc;
+}
+
+.footer-links li {
+  margin-bottom: 0.75rem;
+}
+
+.footer-links a {
+  color: #cbd5e0;
+  text-decoration: none;
+  transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.footer-links a:hover {
+  color: #f7fafc;
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #4a5568;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #a0aec0;
+}
+
+/* Dark Mode Adjustments */
+[data-theme="dark"] body {
+  color: var(--dark-text-primary);
+}
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+  color: var(--dark-text-primary);
+}
+
+[data-theme="dark"] .article-card {
+  background-color: var(--dark-secondary);
+  border-color: var(--dark-tertiary);
+}
+
+[data-theme="dark"] .article-card-title {
+  color: var(--dark-text-primary);
+}
+
+[data-theme="dark"] .article-card-excerpt {
+  color: var(--dark-text-secondary);
+}
+
+[data-theme="dark"] .article-meta {
+  color: var(--dark-text-muted);
+}
+
+[data-theme="dark"] .article-tag {
+  background-color: var(--dark-tertiary);
+  color: var(--dark-text-secondary);
+}
+
+[data-theme="dark"] .methodology-step {
+  background-color: var(--dark-secondary);
+  border-color: var(--dark-tertiary);
+}
+
+[data-theme="dark"] .step-title {
+  color: var(--dark-text-primary);
+}
+
+[data-theme="dark"] .step-description {
+  color: var(--dark-text-secondary);
+}
+
+[data-theme="dark"] .contact-form {
+  background-color: var(--dark-secondary);
+}
+
+[data-theme="dark"] .form-label {
+  color: var(--dark-text-primary);
+}
+
+[data-theme="dark"] .form-control {
+  background-color: var(--dark-tertiary);
+  border-color: var(--dark-tertiary);
+  color: var(--dark-text-primary);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .methodology-steps {
+    grid-template-columns: 1fr;
+  }
+}
